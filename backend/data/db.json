@@ -1,0 +1,42 @@
+{
+  "admins": [
+    {
+      "id": "adm_14ptliod",
+      "email": "admin@rumahsakit.or.id",
+      "name": "Admin Utama",
+      "password_hash": "$2a$10$Mg9ZztoMUsh.tE/fmqayYOKIkxvYPYkwnSpPmsLIJeucV2FGlwoy6",
+      "created_at": "2025-12-05T20:58:32.311Z"
+    }
+  ],
+  "users": [
+    {
+      "id": "u_Pp0rZ3Rv",
+      "email": "pegawai1@rumahsakit.or.id",
+      "name": "Budi Santoso",
+      "role": "staff",
+      "password_hash": "$2a$10$WfeelA4Koaf8LrpfD3niJePcEvqmRYYtMO2jxlnhBcGGX59dlXYTq",
+      "active": true,
+      "created_at": "2025-12-05T21:11:34.544Z",
+      "department": "Poliklinik",
+      "position": "Perawat",
+      "dob": "1988-05-02",
+      "employmentDate": "2020-02-15",
+      "gender": null,
+      "education": "D3 Keperawatan",
+      "phone": "08123456789",
+      "address": "",
+      "nip": ""
+    }
+  ],
+  "attendance": [
+    {
+      "id": "att_VxcTHaCm",
+      "user_id": "adm_14ptliod",
+      "user_name": "Admin Utama",
+      "type": null,
+      "status": "in",
+      "reason": null,
+      "time": "2025-12-05T21:11:54.907Z"
+    }
+  ]
+}

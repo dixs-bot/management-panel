@@ -1,0 +1,7 @@
+:root{ --accent: #0b7b88; --accent-2: #56c7c1; --muted: #536b6e; --bg: #f7fbfb; --card-bg: #ffffff; --glass: rgba(11,123,136,0.06); --radius: 12px; --shadow: 0 10px 30px rgba(11,123,136,0.06); --text: #06323a; }
+body{ background:var(--bg); color:var(--text); font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
+.card { background:var(--card-bg); border-radius:var(--radius); box-shadow:var(--shadow); border:1px solid rgba(6,51,55,0.04); }
+.btn-primary { background: linear-gradient(90deg,var(--accent),var(--accent-2)); border:0; color:#fff; box-shadow:0 8px 24px rgba(11,123,136,0.08); }
+.btn-outline-primary { border-color: rgba(11,123,136,0.12); color:var(--accent); }
+.form-control:focus{ box-shadow:0 8px 24px rgba(11,123,136,0.06); border-color: rgba(11,123,136,0.24); }
+.muted-small{ color:var(--muted); font-size:13px; }

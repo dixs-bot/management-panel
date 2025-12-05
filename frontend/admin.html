@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin Panel — HealthStation</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="theme-hospital.css">
+  <style> body { background:#f7fbfb; color:#06323a } .sidebar{ width:260px; background:#fff; border-right:1px solid #e6eef0; min-height:100vh; } .card-stat{ border-radius:12px; background:linear-gradient(180deg,#fff,#f8fbfb); box-shadow:0 6px 18px rgba(6,51,55,0.04); padding:16px; } .detail-row{ background:#fcffff; border-left:4px solid rgba(11,123,136,0.12); padding:12px; border-radius:8px; }</style>
+</head>
+<body>
+  <div class="d-flex">
+    <aside class="sidebar d-flex flex-column p-3">
+      <a href="#" class="d-flex align-items-center mb-3 text-decoration-none">
+        <div class="rounded-3" style="width:54px;height:54px;display:grid;place-items:center;background:linear-gradient(180deg,#0b7b88,#56c7c1);color:#fff;font-weight:800">HS</div>
+        <div class="ms-2"><strong>HealthStation</strong><div class="muted-small">Panel Admin</div></div>
+      </a>
+      <hr>
+      <ul class="nav nav-pills flex-column mb-auto" id="navMenu">
+        <li class="nav-item"><a class="nav-link active" data-section="dashboard" href="#">Dashboard</a></li>
+        <li><a class="nav-link" data-section="users" href="#">User Management</a></li>
+        <li><a class="nav-link" data-section="admins" href="#">Admin Accounts</a></li>
+        <li><a class="nav-link" data-section="attendance" href="#">Absensi</a></li>
+      </ul>
+      <div class="mt-auto small text-muted">Login sebagai: <span id="whoami">—</span></div>
+      <button id="btnLogout" class="btn btn-outline-secondary btn-sm mt-2">Logout</button>
+    </aside>
+    <main class="content flex-grow-1 p-4">
+      <div id="mainArea">
+        <div id="dashboard" class="section">
+          <div class="d-flex justify-content-between mb-3"><h4>Dashboard</h4><div><button class="btn btn-success me-2" id="btnRefresh">Refresh</button></div></div>
+          <div id="dashboardContent" class="card-stat d-flex gap-3"><div class="flex-grow-1"><div class="text-muted">Total Users</div><div id="statUsers" style="font-size:20px;font-weight:700">—</div></div><div class="flex-grow-1"><div class="text-muted">Total Admins</div><div id="statAdmins" style="font-size:20px;font-weight:700">—</div></div><div class="flex-grow-1"><div class="text-muted">Absensi Hari Ini</div><div id="statAbsensi" style="font-size:20px;font-weight:700">—</div></div></div>
+        </div>
+
+        <div id="users" class="section d-none mt-3">
+          <div class="d-flex justify-content-between mb-3"><h4>User Management</h4><div><button class="btn btn-primary" id="btnAddUser">Tambah Pegawai</button></div></div>
+          <div class="card"><div class="card-body p-2"><div class="table-responsive"><table class="table table-hover" id="usersTable"><thead class="table-light"><tr><th style="min-width:160px">NIP / Email</th><th>Nama</th><th>Departemen</th><th>Jabatan</th><th>Role</th><th>Status</th><th style="min-width:200px">Aksi</th></tr></thead><tbody></tbody></table></div></div></div>
+        </div>
+
+        <div id="admins" class="section d-none mt-3"><div class="d-flex justify-content-between mb-3"><h4>Admin Accounts</h4><div><button class="btn btn-primary" id="btnAddAdmin">Tambah Admin</button></div></div><div class="card p-3"><table class="table" id="adminsTable"><thead><tr><th>Email</th><th>Nama</th><th>Actions</th></tr></thead><tbody></tbody></table></div></div>
+
+        <!-- Attendance section will be replaced by JS content HTML from earlier messages -->
+        <div id="attendance" class="section d-none mt-3">
+          <!-- placeholder - admin-upgraded.js will interact with DOM elements; ensure elements exist -->
+          <div class="d-flex justify-content-between mb-3">
+            <h4>Absensi</h4>
+            <div class="d-flex gap-2 align-items-center">
+              <button class="btn btn-outline-primary" id="btnMark">Tandai Masuk (Now)</button>
+              <button class="btn btn-outline-secondary" id="btnAddStatus">Tambah Status (Sakit/Izin)</button>
+              <select id="monthSelect" class="form-select form-select-sm" style="width:200px"></select>
+              <button class="btn btn-primary" id="btnLoadSummary">Lihat Rekap Bulanan</button>
+              <button class="btn btn-success" id="btnExportCSV">Export CSV</button>
+            </div>
+          </div>
+
+          <div class="card p-3 mb-3">
+            <h6 class="mb-2">Rekap Bulanan</h6>
+            <div class="table-responsive">
+              <table class="table table-sm" id="summaryTable"><thead class="table-light"><tr><th>Nama</th><th>Days Present</th><th>In</th><th>Out</th><th>Izin</th><th>Sakit</th><th>Permission</th><th>Total</th></tr></thead><tbody></tbody></table>
+            </div>
+          </div>
+
+          <div class="card p-3">
+            <h6 class="mb-2">Daftar Absensi (Terakhir)</h6>
+            <table class="table" id="attendanceTable"><thead><tr><th>Waktu</th><th>User</th><th>Status</th><th>Jenis</th><th>Alasan</th></tr></thead><tbody></tbody></table>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Modal Add User (simple) -->
+  <div class="modal fade" id="modalUser" tabindex="-1"><div class="modal-dialog modal-lg"><form id="formUser" class="modal-content"><div class="modal-header"><h5 class="modal-title">Tambah Pegawai</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="row g-3"><div class="col-md-6"><label class="form-label">NIP / Email</label><input name="email" class="form-control" required></div><div class="col-md-6"><label class="form-label">Nama Lengkap</label><input name="name" class="form-control" required></div><div class="col-md-6"><label class="form-label">Departemen / Tempat Kerja</label><input name="department" class="form-control"></div><div class="col-md-6"><label class="form-label">Jabatan</label><input name="position" class="form-control"></div><div class="col-md-4"><label class="form-label">Tanggal Lahir</label><input name="dob" type="date" class="form-control"></div><div class="col-md-4"><label class="form-label">Tanggal Masuk</label><input name="employmentDate" type="date" class="form-control"></div><div class="col-md-4"><label class="form-label">Gender</label><select name="gender" class="form-select"><option value="">Pilih...</option><option value="female">Perempuan</option><option value="male">Laki-laki</option><option value="other">Lainnya</option></select></div><div class="col-md-6"><label class="form-label">Pendidikan Terakhir</label><input name="education" class="form-control"></div><div class="col-md-6"><label class="form-label">No. Telepon</label><input name="phone" class="form-control"></div><div class="col-12"><label class="form-label">Alamat</label><textarea name="address" rows="2" class="form-control"></textarea></div><div class="col-md-6"><label class="form-label">Role</label><select name="role" class="form-select"><option value="staff">Pegawai</option><option value="doctor">Dokter</option><option value="admin">Admin</option></select></div><div class="col-md-6"><label class="form-label">Password (default)</label><input name="password" type="password" class="form-control" required></div></div></div><div class="modal-footer"><button type="submit" class="btn btn-primary">Simpan</button></div></form></div></div>
+
+  <!-- Detail modal -->
+  <div class="modal fade" id="modalUserDetail" tabindex="-1"><div class="modal-dialog modal-lg"><div class="modal-content"><div class="modal-header"><h5 class="modal-title">Biodata Pegawai</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div id="detailContent"></div></div></div></div></div>
+
+  <!-- Change pwd modal -->
+  <div class="modal fade" id="modalPwd" tabindex="-1"><div class="modal-dialog"><form id="formPwd" class="modal-content"><div class="modal-header"><h5 class="modal-title">Ubah Password</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><input type="hidden" name="userId"><div class="mb-2"><label class="form-label small">Password Baru</label><input name="newPassword" class="form-control" required></div></div><div class="modal-footer"><button type="submit" class="btn btn-primary">Ubah</button></div></form></div></div>
+
+  <!-- Modal: Add Attendance Status -->
+  <div class="modal fade" id="modalAddStatus" tabindex="-1"><div class="modal-dialog"><form id="formAddStatus" class="modal-content"><div class="modal-header"><h5 class="modal-title">Catat Absensi (Sakit / Izin / Permission)</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="mb-2"><label class="form-label">Pegawai (pilih)</label><select id="selectUserForStatus" class="form-select" required></select></div><div class="mb-2"><label class="form-label">Status</label><select name="status" class="form-select" required><option value="">Pilih...</option><option value="sick">Sakit</option><option value="leave">Izin (Cuti)</option><option value="permission">Permission</option></select></div><div class="mb-2"><label class="form-label">Alasan / Catatan</label><input name="reason" class="form-control" placeholder="Alasan (opsional)"></div><div class="row g-2"><div class="col-12"><small class="text-muted">Isi Single Date atau From - To untuk rentang hari.</small></div><div class="col-md-6"><label class="form-label">Single Date</label><input name="date" type="date" class="form-control"></div><div class="col-md-6"><label class="form-label">Atau From - To</label><div class="d-flex gap-2"><input name="fromDate" type="date" class="form-control"><input name="toDate" type="date" class="form-control"></div></div></div></div><div class="modal-footer"><button class="btn btn-primary">Simpan</button></div></form></div></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="api-client.js"></script>
+  <script src="admin-upgraded.js"></script>
+</body>
+</html>
